@@ -1,17 +1,17 @@
 require('isomorphic-fetch')
 const fs = require('fs')
-const AUTH_TOKEN = require('./secrets').AUTH_TOKEN
+const { GITHUB_AUTH_TOKEN } = process.env
 // Octokit/rest npm
 
 const getAssignees = new Promise((resolve,reject) => {
-  fs.readFile('Assignees.json', (err, data) => {
+  fs.readFile('source/Assignees.json', (err, data) => {
     if (err) reject(err)
     resolve(JSON.parse(data))
   })
 })
 
 const saveAssignees = assignees => {
-  fs.writeFile('Assignees.json', JSON.stringify(assignees), err => (err && console.log(err)))
+  fs.writeFile('source/Assignees.json', JSON.stringify(assignees), err => (err && console.log(err)))
 }
 
 const assignUserToPR = (pullRequest, assignee) => {
@@ -27,13 +27,13 @@ const assignUserToPR = (pullRequest, assignee) => {
   .catch(err => console.log(err))
 }
 
-const work = async () => {
+exports.work = async () => {
   let assignees = await getAssignees
   
   fetch('https://api.github.com/repos/rentpath/ag.js/pulls', {
     method: 'GET',
     headers: {
-      Authorization: AUTH_TOKEN,
+      Authorization: GITHUB_AUTH_TOKEN,
     },
   })
   .then(response => (response.json()))
@@ -53,4 +53,3 @@ const work = async () => {
   .catch(err => console.log(err))
 }
 
-work()
