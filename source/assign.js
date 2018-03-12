@@ -20,7 +20,7 @@ const assignUserToPR = (pullRequest, assignee) => {
     method: 'POST',
     body: JSON.stringify(params),
     headers: {
-      Authorization: AUTH_TOKEN,
+      Authorization: GITHUB_AUTH_TOKEN,
     },
   })
   .then(response => { if (!response.ok) console.log('assign user failed, api response code: ', response.status)})
